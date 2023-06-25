@@ -173,7 +173,7 @@ const getMasterVaultLibrary = (token, user, page, onlyFavorites, library) => new
   fetch(
       'https://www.keyforgegame.com/api/users/' +
       user.id +
-      '/decks/?page=' +
+      '/my-decks/?page=' +
       page +
       '&page_size=10&search=&power_level=0,11&chains=0,24&only_favorites=' +
       onlyFavorites +
@@ -291,7 +291,7 @@ const getCrucibleLibrary = (token, user, page, library) => new Promise((resolve,
 
 const importDeckDok = (token, deckId) => {
   fetch(
-    'https://decksofkeyforge.com/api/decks/' + deckId + '/import-and-add', {
+    'https://decksofkeyforge.com/api/my-decks/' + deckId + '/import-and-add', {
       credentials: 'include',
       headers: {
         accept: 'application/json, text/plain, */*',
@@ -325,8 +325,8 @@ const importDeckCrucible = (token, deckId) => {
   }).then((response) => console.log('Import ' + deckId, response))
 }
 
-chrome.tabs.getSelected(null, (tab) => {
-  tabUrl = tab.url;
+chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+  tabUrl = tabs[0].url;
   if (tabUrl.includes('www.keyforgegame.com')) {
     masterVaultSection.classList.remove('display-none')
     dokSection.classList.add('display-none')
@@ -340,7 +340,7 @@ chrome.tabs.getSelected(null, (tab) => {
     masterVaultSection.classList.add('display-none')
     dokSection.classList.add('display-none')
   }
-})
+});
 
 loadLibrary().then((library) => {
   if (!library || library.length == 0) {

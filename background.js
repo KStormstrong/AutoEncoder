@@ -1,31 +1,39 @@
 const apiKey = ""
 let library = []
 
-chrome.runtime.onInstalled.addListener(() => chrome.declarativeContent.onPageChanged.removeRules(undefined, () => chrome.declarativeContent.onPageChanged.addRules([{
-  conditions: [
-    new chrome.declarativeContent.PageStateMatcher({
-      pageUrl: {
-        hostEquals: 'www.keyforgegame.com'
-      }
-    }),
-    new chrome.declarativeContent.PageStateMatcher({
-      pageUrl: {
-        hostEquals: 'decksofkeyforge.com'
-      }
-    }),
-    new chrome.declarativeContent.PageStateMatcher({
-      pageUrl: {
-        hostEquals: 'www.thecrucible.online'
-      }
-    }),
-    new chrome.declarativeContent.PageStateMatcher({
-      pageUrl: {
-        hostEquals: 'thecrucible.online'
-      }
-    })
-  ],
-  actions: [new chrome.declarativeContent.ShowPageAction()]
-}])))
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.action.disable();
+
+  chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
+    let libraryaccess = {
+      conditions: [
+        new chrome.declarativeContent.PageStateMatcher({
+          pageUrl: {
+            hostSuffix: 'keyforgegame.com',
+          }
+        }),
+        new chrome.declarativeContent.PageStateMatcher({
+          pageUrl: {
+            hostSuffix: 'decksofkeyforge.com'
+          }
+        }),
+        new chrome.declarativeContent.PageStateMatcher({
+          pageUrl: {
+            hostSuffix: 'thecrucible.online'
+          }
+        }),
+        new chrome.declarativeContent.PageStateMatcher({
+          pageUrl: {
+            hostSuffix: 'thecrucible.online'
+          }
+        })
+      ],
+      actions: [new chrome.declarativeContent.ShowAction()]
+    };
+    let rules = [libraryaccess];
+    chrome.declarativeContent.onPageChanged.addRules(rules);
+  });
+});
 
 // CORS requests must happen in a background page now...
 chrome.runtime.onMessage.addListener(

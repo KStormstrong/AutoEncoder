@@ -200,7 +200,7 @@ let menu = document.createRange().createContextualFragment(`
     <div id="deck-container"></div>
     <span class="dok-credit">
       <a href="https://decksofkeyforge.com">
-        <img class="dok-icon" src="${chrome.extension.getURL('img/dok-apple-touch-icon.png')}">
+        <img class="dok-icon" src="${chrome.runtime.getURL('img/dok-apple-touch-icon.png')}">
       </a>
     </span>
   </nav>
