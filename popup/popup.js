@@ -171,13 +171,12 @@ const loadLibrary = () => new Promise((resolve, reject) => {
 
 const getMasterVaultLibrary = (token, user, page, onlyFavorites, library) => new Promise((resolve, reject) => {
   fetch(
-      'https://www.keyforgegame.com/api/users/v2' +
+      'https://www.keyforgegame.com/api/users/v2/' +
       user.id +
       '/decks/?page=' +
       page +
-      '&page_size=10&search=&power_level=0,11&chains=0,24&only_favorites=' +
-      onlyFavorites +
-      '&ordering=-date', {
+      '&page_size=10&search=&only_favorites=' +
+      onlyFavorites + 'ordering=-date', {
         credentials: 'include',
         headers: {
           accept: 'application/json',
@@ -202,6 +201,7 @@ const getMasterVaultLibrary = (token, user, page, onlyFavorites, library) => new
       }
     })
 })
+
 
 const getDokLibrary = (token, user, page, library) => new Promise((resolve, reject) => {
   let body = JSON.stringify({
@@ -291,7 +291,7 @@ const getCrucibleLibrary = (token, user, page, library) => new Promise((resolve,
 
 const importDeckDok = (token, deckId) => {
   fetch(
-    'https://decksofkeyforge.com/api/decks/' + deckId + '/import-and-add', {
+    'https://decksofkeyforge.com/api/my-decks/' + deckId + '/import-and-add', {
       credentials: 'include',
       headers: {
         accept: 'application/json, text/plain, */*',

@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "AutoEncoder: KeyForge Deck Sync Tool",
-    "short_name": "Library Access",
+    "short_name": "AutoEncoder",
     "version": "0.6",
     "permissions": [
         "activeTab",
