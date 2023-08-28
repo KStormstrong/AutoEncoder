@@ -33,8 +33,6 @@ const handleMasterVaultSync = (cookie) => {
       libraryMin.push(deck.id)
     })
 
-    console.log('accessed: ', libraryMin);
-
     chrome.runtime.sendMessage({
       popupQuery: 'saveLibrary',
       library: libraryMin
