@@ -33,6 +33,8 @@ const handleMasterVaultSync = (cookie) => {
       libraryMin.push(deck.id)
     })
 
+    console.log('accessed: ', libraryMin);
+
     chrome.runtime.sendMessage({
       popupQuery: 'saveLibrary',
       library: libraryMin
@@ -291,7 +293,7 @@ const getCrucibleLibrary = (token, user, page, library) => new Promise((resolve,
 
 const importDeckDok = (token, deckId) => {
   fetch(
-    'https://decksofkeyforge.com/api/my-decks/' + deckId + '/import-and-add', {
+    'https://decksofkeyforge.com/api/decks/' + deckId + '/import-and-add', {
       credentials: 'include',
       headers: {
         accept: 'application/json, text/plain, */*',
@@ -360,35 +362,61 @@ libraryAccessBtn.onclick = (el) => {
   )
 }
 
-syncDokBtn.onclick = (el) => {
-  loading(true)
-  chrome.tabs.query({
-      active: true,
-      currentWindow: true
-    }, (tabs) =>
-    chrome.tabs.executeScript(
-      tabs[0].id, {
-        code: 'localStorage["AUTH"];'
-      },
-      (response) => {
-        token = response[0]
-        handleDokSync(token)
-      }
-    ))
+syncDokBtn.onclick = async (el) => {
+    loading(true);
+
+    try {
+        let [currentTab] = await chrome.tabs.query({
+            active: true,
+            currentWindow: true
+        });
+
+        if (!currentTab.id) {
+            console.error("No active tab found.");
+            return;
+        }
+
+        let result = await chrome.scripting.executeScript({
+            target: { tabId: currentTab.id },
+            function: getAuthToken
+        });
+
+        let token = result[0].result;
+        handleDokSync(token);
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-syncCrucibleBtn.onclick = (el) => {
-  loading(true)
-  chrome.tabs.query({
-      active: true,
-      currentWindow: true
-    }, (tabs) =>
-    chrome.tabs.executeScript(
-      tabs[0].id, {
-        code: 'localStorage["refreshToken"];'
-      },
-      (response) => {
-        handleCrucibleSync(response[0])
-      }
-    ))
+function getAuthToken() {
+    return localStorage["AUTH"];
+}
+
+syncCrucibleBtn.onclick = async (el) => {
+    loading(true);
+
+    try {
+        let [currentTab] = await chrome.tabs.query({
+            active: true,
+            currentWindow: true
+        });
+
+        if (!currentTab.id) {
+            console.error("No active tab found.");
+            return;
+        }
+
+        let result = await chrome.scripting.executeScript({
+            target: { tabId: currentTab.id },
+            function: getRefreshToken
+        });
+
+        handleCrucibleSync(result[0].result);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function getRefreshToken() {
+    return localStorage["refreshToken"];
 }
